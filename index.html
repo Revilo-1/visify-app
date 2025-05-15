@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="dashboard">Visify - Dashboard</title>
+    <script src="js/language.js"></script>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-light: #3b82f6;
+            --primary-dark: #1d4ed8;
+            --sidebar-bg: #1e293b;
+            --sidebar-hover: #334155;
+            --sidebar-active: #3b82f6;
+            --text-primary: #1f2937;
+            --text-secondary: #4b5563;
+            --border-color: #e5e7eb;
+            --card-bg: #ffffff;
+            --bg-color: #f9fafb;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --radius-sm: 0.375rem;
+            --radius: 0.5rem;
+            --radius-lg: 0.75rem;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+        }
+        
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.25;
+        }
+        
+        p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+        
+        body {
+            background-color: #f9fafb;
+            color: var(--gray-900);
+            line-height: 1.5;
+        }
+        
+        body {
+            display: flex;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            font-size: 0.9375rem;
+            line-height: 1.5;
+        }
+        
+        .container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            width: 100%;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            position: relative;
+        }
+        
+        .main-content {
+            padding: 2rem 2.5rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        .main-content h1 {
+            font-size: 1.875rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .main-content > p {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            max-width: 700px;
+        }
+        
+        h1, h2, h3 {
+            margin-bottom: 1rem;
+            color: var(--gray-900);
+        }
+        
+        .mockup-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .mockup {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: all 0.2s ease;
+            border: 1px solid var(--border-color);
+        }
+        
+        .mockup:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .mockup:hover {
+            transform: translateY(-4px);
+        }
+        
+        .mockup-header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 1rem 1.5rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+            letter-spacing: 0.01em;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .mockup-content {
+            padding: 1.5rem;
+        }
+        
+        .mockup-content h3 {
+            font-size: 1.25rem;
+            margin-bottom: 1.25rem;
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+        
+        /* Dashboard */
+        .dashboard {
+            background: white;
+            min-height: 300px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: var(--card-bg);
+            padding: 1.5rem 1rem;
+            border-radius: var(--radius);
+            text-align: center;
+            border: 1px solid var(--border-color);
+            transition: all 0.2s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+        
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 0.5rem 0 0.25rem;
+            line-height: 1.2;
+        }
+        
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        
+        .recent-reviews {
+            margin-top: 1.5rem;
+        }
+        
+        .review-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 1.25rem 0;
+            border-bottom: 1px solid var(--border-color);
+            transition: background-color 0.2s ease;
+            border-radius: var(--radius-sm);
+            margin: 0 -0.5rem;
+            padding: 1rem 0.5rem;
+        }
+        
+        .review-item:hover {
+            background-color: rgba(0, 0, 0, 0.01);
+        }
+        
+        .review-rating {
+            color: #f59e0b;
+            margin: 0.25rem 0 0.5rem;
+            letter-spacing: 1px;
+            font-size: 1.1em;
+        }
+        
+        /* Review Form */
+        .review-form {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid var(--gray-200);
+            border-radius: 0.375rem;
+        }
+        
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
+        .btn:hover {
+            background: #4338ca;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            background: var(--sidebar-bg);
+            color: rgba(255, 255, 255, 0.9);
+            padding: 1.5rem 0 2rem;
+            height: 100vh;
+            position: sticky;
+            top: 0;
+            overflow-y: auto;
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.2s ease;
+            z-index: 50;
+        }
+        
+        .sidebar h3 {
+            color: white;
+            padding: 0 1.75rem 1.25rem;
+            margin: 0 0 0.5rem 0;
+            font-size: 1.25rem;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        .nav-menu {
+            list-style: none;
+            padding: 0.5rem 0.75rem;
+        }
+        
+        .nav-item {
+            margin-bottom: 0.25rem;
+        }
+        
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 0.65rem 1.25rem;
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border-radius: var(--radius-sm);
+            font-size: 0.9375rem;
+            font-weight: 500;
+            margin: 0 0.5rem;
+        }
+        
+        .nav-link:hover {
+            background: var(--sidebar-hover);
+            color: white;
+        }
+        
+        .nav-link.active {
+            background: var(--primary);
+            color: white;
+            font-weight: 500;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-link span:first-child {
+            margin-right: 0.75rem;
+            width: 20px;
+            text-align: center;
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .nav-link.active span:first-child {
+            opacity: 1;
+        }
+        
+        /* Review Display */
+        .review-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border-color);
+            transition: all 0.2s ease;
+        }
+        
+        .review-card:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow);
+        }
+        
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+        
+        .reviewer {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 1.05rem;
+        }
+        
+        .review-date {
+            color: var(--text-secondary);
+            font-size: 0.8125rem;
+            font-weight: 400;
+        }
+
+        /* Sidebar Styles */
+        .menu-toggle {
+            display: none;
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            background: var(--primary);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            cursor: pointer;
+            z-index: 1001;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 280px;
+            height: 100vh;
+            background: #1e293b;
+            color: white;
+            padding: 1.5rem 0;
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+            transition: transform 0.3s ease;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar-header {
+            padding: 0 1.5rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-header h3 {
+            margin: 0;
+            font-size: 1.25rem;
+            color: white;
+        }
+
+        .sidebar-close {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .sidebar-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem 0.5rem;
+        }
+
+        .nav-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .nav-item {
+            margin-bottom: 0.25rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.2s;
+            margin: 0 0.5rem;
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .nav-link.active {
+            background: var(--primary);
+            color: white;
+            font-weight: 500;
+        }
+
+        .nav-icon {
+            margin-right: 1rem;
+            font-size: 1.25rem;
+            width: 24px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-text {
+            flex: 1;
+        }
+
+        .nav-badge {
+            background: var(--primary-dark);
+            color: white;
+            font-size: 0.75rem;
+            padding: 0.15rem 0.5rem;
+            border-radius: 9999px;
+            font-weight: 500;
+        }
+
+        .nav-divider {
+            padding: 1rem 1.5rem 0.5rem;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            margin-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-divider:first-child {
+            border-top: none;
+            margin-top: 0;
+        }
+
+        .sidebar-footer {
+            padding: 1.5rem 1.5rem 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 0;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin-right: 0.75rem;
+            flex-shrink: 0;
+        }
+
+        .user-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .user-name {
+            font-weight: 600;
+            margin-bottom: 0.1rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .user-email {
+            font-size: 0.8125rem;
+            color: rgba(255, 255, 255, 0.7);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .logout {
+            color: #fca5a5 !important;
+        }
+
+        /* Adjust main content for sidebar */
+        .main-content {
+            margin-left: 280px;
+            padding: 2rem;
+            transition: margin 0.3s ease;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 1024px) {
+            .menu-toggle {
+                display: flex;
+            }
+
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease-in-out;
+            }
+
+            .sidebar.visible {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+                transition: margin 0.3s ease-in-out;
+            }
+
+            .sidebar-visible .main-content {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar Navigation -->
+    <button id="menu-toggle" class="menu-toggle" aria-label="Toggle menu">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+    </button>
+    <aside id="sidebar" class="sidebar">
+        <div class="sidebar-header">
+            <h3 data-i18n="visify">Visify</h3>
+            <button class="sidebar-close">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+        <nav class="sidebar-nav">
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span class="nav-icon">📈</span>
+                        <span class="nav-text" data-i18n="analytics">Analytics</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="request-review.html" class="nav-link">
+                        <span class="nav-icon">✉️</span>
+                        <span class="nav-text" data-i18n="requestReview">Request Review</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span class="nav-icon">📋</span>
+                        <span class="nav-text" data-i18n="templates">Templates</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span class="nav-icon">👥</span>
+                        <span class="nav-text" data-i18n="customers">Customers</span>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span class="nav-icon">👤</span>
+                        <span class="nav-text" id="user-info">My Account</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="admin.html" class="nav-link admin-only" style="display: none;">
+                        <span class="nav-icon">👑</span>
+                        <span class="nav-text" data-i18n="adminDashboard">Admin</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="logout()">
+                        <span class="nav-icon">🚪</span>
+                        <span class="nav-text" data-i18n="logout">Logout</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="settings.html" class="nav-link">
+                        <span class="nav-icon">⚙️</span>
+                        <span class="nav-text" data-i18n="settings">Settings</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <div class="sidebar-footer">
+            <div class="user-profile" style="padding: 1rem; border-top: 1px solid rgba(255, 255, 255, 0.1); margin-top: auto;">
+                <div style="display: flex; align-items: center;">
+                    <div style="width: 40px; height: 40px; border-radius: 50%; background: #3b82f6; color: white; display: flex; align-items: center; justify-content: center; font-weight: 600; margin-right: 0.75rem; font-size: 0.875rem;">JD</div>
+                    <div style="overflow: hidden;">
+                        <div style="color: white; font-weight: 500; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">John Doe</div>
+                        <div style="color: rgba(255, 255, 255, 0.7); font-size: 0.75rem; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">john@example.com</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </aside>
+    
+    <div class="main-content">
+        <div class="page-header">
+            <h1 data-i18n="dashboard">Dashboard</h1>
+            <p data-i18n="welcomeBack">Welcome back! Here's what's happening with your reviews.</p>
+            <!-- Admin only content -->
+            <div class="admin-only" style="margin-top: 1rem; padding: 1rem; background: #f0f9ff; border-radius: 0.5rem; display: none;">
+                <h3 data-i18n="adminTools">Admin Tools</h3>
+                <button class="btn btn-primary" data-i18n="userManagement">User Management</button>
+                <button class="btn btn-secondary" data-i18n="systemSettings">System Settings</button>
+            </div>
+        </div>
+        <header style="margin-bottom: 2.5rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <div>
+                    <h1 data-i18n="analyticsDashboard">Analytics Dashboard</h1>
+                    <p style="margin-top: 0.5rem; color: var(--text-secondary);">Track and analyze your review performance</p>
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <select style="padding: 0.5rem 1rem; border: 1px solid var(--border-color); border-radius: var(--radius); background: white; font-size: 0.9375rem;">
+                        <option data-i18n="last30Days">Last 30 days</option>
+                        <option data-i18n="last7Days">Last 7 days</option>
+                        <option data-i18n="last90Days">Last 90 days</option>
+                        <option data-i18n="thisYear">This year</option>
+                    </select>
+                    <button style="display: flex; align-items: center; gap: 0.5rem; background: white; border: 1px solid var(--border-color); padding: 0.5rem 1rem; border-radius: var(--radius); font-weight: 500; cursor: pointer; transition: all 0.2s ease;">
+                        <span>📊</span>
+                        <span data-i18n="exportReport">Export Report</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Key Metrics -->
+        <div class="metrics-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+            <div class="metric-card" style="background: white; border-radius: var(--radius); padding: 1.5rem; border: 1px solid var(--border-color);">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                    <div>
+                        <div style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0.5rem;" data-i18n="totalReviews">Total Reviews</div>
+                        <div style="font-size: 2rem; font-weight: 700; color: var(--text-primary);">1,248</div>
+                        <div style="display: flex; align-items: center; margin-top: 0.5rem; color: #10b981; font-size: 0.875rem; font-weight: 500;">
+                            <span>↑ 12.5%</span>
+                            <span style="margin-left: 0.25rem;" data-i18n="vsLastPeriod">vs last period</span>
+                        </div>
+                    </div>
+                    <div style="width: 44px; height: 44px; border-radius: 50%; background: #dbeafe; display: flex; align-items: center; justify-content: center;">
+                        <span style="font-size: 1.25rem;">📝</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="metric-card" style="background: white; border-radius: var(--radius); padding: 1.5rem; border: 1px solid var(--border-color);">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                    <div>
+                        <div style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0.5rem;" data-i18n="averageRating">Average Rating</div>
+                        <div style="font-size: 2rem; font-weight: 700; color: var(--text-primary);">4.7</div>
+                        <div style="display: flex; align-items: center; margin-top: 0.5rem; color: #10b981; font-size: 0.875rem; font-weight: 500;">
+                            <span>↑ 0.2</span>
+                            <span style="margin-left: 0.25rem;" data-i18n="vsLastPeriod">vs last period</span>
+                        </div>
+                    </div>
+                    <div style="width: 44px; height: 44px; border-radius: 50%; background: #fef3c7; display: flex; align-items: center; justify-content: center;">
+                        <span style="font-size: 1.25rem;">⭐</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="metric-card" style="background: white; border-radius: var(--radius); padding: 1.5rem; border: 1px solid var(--border-color);">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                    <div>
+                        <div style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0.5rem;" data-i18n="responseRate">Response Rate</div>
+                        <div style="font-size: 2rem; font-weight: 700; color: var(--text-primary);">94%</div>
+                        <div style="display: flex; align-items: center; margin-top: 0.5rem; color: #10b981; font-size: 0.875rem; font-weight: 500;">
+                            <span>↑ 3.2%</span>
+                            <span style="margin-left: 0.25rem;" data-i18n="vsLastPeriod">vs last period</span>
+                        </div>
+                    </div>
+                    <div style="width: 44px; height: 44px; border-radius: 50%; background: #dcfce7; display: flex; align-items: center; justify-content: center;">
+                        <span style="font-size: 1.25rem;">💬</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Rating Distribution -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+            <div style="background: white; border-radius: var(--radius); border: 1px solid var(--border-color); padding: 1.5rem;">
+                <h3 style="margin-top: 0; margin-bottom: 1.5rem; font-size: 1.125rem;" data-i18n="ratingDistribution">Rating Distribution</h3>
+                <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                    <!-- 5 stars -->
+                    <div style="display: flex; align-items: center">
+                        <div style="width: 60px; text-align: right; margin-right: 1rem; font-weight: 500">5 ★</div>
+                        <div style="flex: 1; height: 24px; background: #e5e7eb; border-radius: 12px; overflow: hidden">
+                            <div style="width: 100%; height: 100%; background: #10b981; border-radius: 12px"></div>
+                        </div>
+                        <div style="width: 40px; text-align: right; margin-left: 1rem; color: var(--text-secondary); font-size: 0.875rem">100%</div>
+                    </div>
+                    <!-- 4 stars -->
+                    <div style="display: flex; align-items: center">
+                        <div style="width: 60px; text-align: right; margin-right: 1rem; font-weight: 500">4 ★</div>
+                        <div style="flex: 1; height: 24px; background: #e5e7eb; border-radius: 12px; overflow: hidden">
+                            <div style="width: 80%; height: 100%; background: #10b981; border-radius: 12px"></div>
+                        </div>
+                        <div style="width: 40px; text-align: right; margin-left: 1rem; color: var(--text-secondary); font-size: 0.875rem">80%</div>
+                    </div>
+                    <!-- 3 stars -->
+                    <div style="display: flex; align-items: center">
+                        <div style="width: 60px; text-align: right; margin-right: 1rem; font-weight: 500">3 ★</div>
+                        <div style="flex: 1; height: 24px; background: #e5e7eb; border-radius: 12px; overflow: hidden">
+                            <div style="width: 60%; height: 100%; background: #f59e0b; border-radius: 12px"></div>
+                        </div>
+                        <div style="width: 40px; text-align: right; margin-left: 1rem; color: var(--text-secondary); font-size: 0.875rem">60%</div>
+                    </div>
+                    <!-- 2 stars -->
+                    <div style="display: flex; align-items: center">
+                        <div style="width: 60px; text-align: right; margin-right: 1rem; font-weight: 500">2 ★</div>
+                        <div style="flex: 1; height: 24px; background: #e5e7eb; border-radius: 12px; overflow: hidden">
+                            <div style="width: 30%; height: 100%; background: #ef4444; border-radius: 12px"></div>
+                        </div>
+                        <div style="width: 40px; text-align: right; margin-left: 1rem; color: var(--text-secondary); font-size: 0.875rem">30%</div>
+                    </div>
+                    <!-- 1 star -->
+                    <div style="display: flex; align-items: center">
+                        <div style="width: 60px; text-align: right; margin-right: 1rem; font-weight: 500">1 ★</div>
+                        <div style="flex: 1; height: 24px; background: #e5e7eb; border-radius: 12px; overflow: hidden">
+                            <div style="width: 10%; height: 100%; background: #ef4444; border-radius: 12px"></div>
+                        </div>
+                        <div style="width: 40px; text-align: right; margin-left: 1rem; color: var(--text-secondary); font-size: 0.875rem">10%</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="background: white; border-radius: var(--radius); border: 1px solid var(--border-color); padding: 1.5rem;">
+                <h3 style="margin-top: 0; margin-bottom: 1.5rem; font-size: 1.125rem;" data-i18n="sentimentAnalysis">Sentiment Analysis</h3>
+                <div class="sentiment-chart">
+                    <div class="chart-outer">
+                        <div class="chart-inner">
+                            <div class="chart-percentage">78%</div>
+                            <div class="chart-label" data-i18n="positive">Positive</div>
+                        </div>
+                    </div>
+                </div>
+                <div style="display: flex; justify-content: center; gap: 2rem">
+                    <div style="display: flex; align-items: center">
+                        <div style="width: 12px; height: 12px; border-radius: 2px; background: #10b981; margin-right: 0.5rem"></div>
+                        <span style="font-size: 0.875rem" data-i18n="positive">Positive (70%)</span>
+                    </div>
+                    <div style="display: flex; align-items: center">
+                        <div style="width: 12px; height: 12px; border-radius: 2px; background: #f59e0b; margin-right: 0.5rem"></div>
+                        <span style="font-size: 0.875rem" data-i18n="neutral">Neutral (20%)</span>
+                    </div>
+                    <div style="display: flex; align-items: center">
+                        <div style="width: 12px; height: 12px; border-radius: 2px; background: #ef4444; margin-right: 0.5rem"></div>
+                        <span style="font-size: 0.875rem" data-i18n="negative">Negative (10%)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Chart -->
+        <div style="background: white; border-radius: var(--radius); border: 1px solid var(--border-color); margin-bottom: 2rem; overflow: hidden;">
+            <div style="padding: 1.5rem; border-bottom: 1px solid var(--border-color);">
+                <h3 style="margin: 0; font-size: 1.125rem;" data-i18n="reviewActivity">Review Activity</h3>
+                <p style="margin: 0.25rem 0 0; font-size: 0.875rem; color: var(--text-secondary);" data-i18n="reviewActivityDescription">Number of reviews received over time</p>
+            </div>
+            <div style="padding: 1.5rem; height: 400px; display: flex; align-items: center; justify-content: center; background: #f9fafb;">
+                <div style="text-align: center; padding: 2rem; max-width: 400px;">
+                    <div style="font-size: 2.5rem; margin-bottom: 1rem;">📈</div>
+                    <h3 style="margin-bottom: 0.5rem;" data-i18n="reviewActivityChart">Review Activity Chart</h3>
+                    <p style="color: var(--text-secondary);" data-i18n="reviewActivityChartDescription">This area will display a beautiful chart showing your review activity over time once implemented.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Recent Activity -->
+        <style>
+            .sentiment-chart {
+                width: 200px;
+                height: 200px;
+                margin: 0 auto 2rem;
+                position: relative;
+            }
+            .chart-outer {
+                width: 200px;
+                height: 200px;
+                border-radius: 50%;
+                background: conic-gradient(
+                    #10b981 0% 70%,
+                    #f59e0b 70% 90%,
+                    #ef4444 90% 100%
+                );
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .chart-inner {
+                width: 140px;
+                height: 140px;
+                background: white;
+                border-radius: 50%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 0 0 8px white, 0 0 0 9px #e5e7eb;
+                z-index: 1;
+            }
+            .chart-percentage {
+                font-size: 1.5rem;
+                font-weight: 700;
+                color: var(--text-primary);
+            }
+            .chart-label {
+                font-size: 0.75rem;
+                color: var(--text-secondary);
+            }
+        </style>
+        <div style="background: white; border-radius: var(--radius); border: 1px solid var(--border-color);">
+            <div style="padding: 1.5rem; border-bottom: 1px solid var(--border-color);">
+                <h3 style="margin: 0; font-size: 1.125rem;" data-i18n="recentActivity">Recent Activity</h3>
+            </div>
+            <div style="padding: 0;">
+                <!-- Review 1 -->
+                <div style="padding: 1rem 1.5rem; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; gap: 1rem">
+                    <div style="width: 40px; height: 40px; border-radius: 50%; background: #e0f2fe; display: flex; align-items: center; justify-content: center; color: #0369a1; font-weight: 600; flex-shrink: 0">SJ</div>
+                    <div style="flex: 1">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem">
+                            <div style="font-weight: 600" data-i18n="sarahJohnson">Sarah Johnson</div>
+                            <div style="color: var(--text-secondary); font-size: 0.875rem" data-i18n="twoHoursAgo">2 hours ago</div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 0.5rem">
+                            <div style="color: #f59e0b; letter-spacing: 2px">★★★★★</div>
+                            <div style="color: var(--text-secondary); font-size: 0.875rem" data-i18n="onGoogle">on Google</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Review 2 -->
+                <div style="padding: 1rem 1.5rem; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; gap: 1rem">
+                    <div style="width: 40px; height: 40px; border-radius: 50%; background: #e0f2fe; display: flex; align-items: center; justify-content: center; color: #0369a1; font-weight: 600; flex-shrink: 0">MC</div>
+                    <div style="flex: 1">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem">
+                            <div style="font-weight: 600" data-i18n="michaelChen">Michael Chen</div>
+                            <div style="color: var(--text-secondary); font-size: 0.875rem" data-i18n="fiveHoursAgo">5 hours ago</div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 0.5rem">
+                            <div style="color: #f59e0b; letter-spacing: 2px">★★★★☆</div>
+                            <div style="color: var(--text-secondary); font-size: 0.875rem" data-i18n="onFacebook">on Facebook</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Review 3 -->
+                <div style="padding: 1rem 1.5rem; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; gap: 1rem">
+                    <div style="width: 40px; height: 40px; border-radius: 50%; background: #e0f2fe; display: flex; align-items: center; justify-content: center; color: #0369a1; font-weight: 600; flex-shrink: 0">EW</div>
+                    <div style="flex: 1">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem">
+                            <div style="font-weight: 600" data-i18n="emmaWilson">Emma Wilson</div>
+                            <div style="color: var(--text-secondary); font-size: 0.875rem" data-i18n="oneDayAgo">1 day ago</div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 0.5rem">
+                            <div style="color: #f59e0b; letter-spacing: 2px">★★★★★</div>
+                            <div style="color: var(--text-secondary); font-size: 0.875rem" data-i18n="onWebsite">on Website</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Review 4 -->
+                <div style="padding: 1rem 1.5rem; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; gap: 1rem">
+                    <div style="width: 40px; height: 40px; border-radius: 50%; background: #e0f2fe; display: flex; align-items: center; justify-content: center; color: #0369a1; font-weight: 600; flex-shrink: 0">DK</div>
+                    <div style="flex: 1">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem">
+                            <div style="font-weight: 600" data-i18n="davidKim">David Kim</div>
+                            <div style="color: var(--text-secondary); font-size: 0.875rem" data-i18n="twoDaysAgo">2 days ago</div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 0.5rem">
+                            <div style="color: #f59e0b; letter-spacing: 2px">★★★☆☆</div>
+                            <div style="color: var(--text-secondary); font-size: 0.875rem" data-i18n="onGoogle">on Google</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Review 5 -->
+                <div style="padding: 1rem 1.5rem; display: flex; align-items: center; gap: 1rem">
+                    <div style="width: 40px; height: 40px; border-radius: 50%; background: #e0f2fe; display: flex; align-items: center; justify-content: center; color: #0369a1; font-weight: 600; flex-shrink: 0">LW</div>
+                    <div style="flex: 1">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem">
+                            <div style="font-weight: 600" data-i18n="lisaWong">Lisa Wong</div>
+                            <div style="color: var(--text-secondary); font-size: 0.875rem" data-i18n="twoDaysAgo">2 days ago</div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 0.5rem">
+                            <div style="color: #f59e0b; letter-spacing: 2px">★★★★★</div>
+                            <div style="color: var(--text-secondary); font-size: 0.875rem" data-i18n="onWebsite">on Website</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="padding: 1rem 1.5rem; text-align: center; border-top: 1px solid var(--border-color)">
+                <a href="#" style="color: var(--primary); text-decoration: none; font-weight: 500; font-size: 0.9375rem" data-i18n="viewAllActivity">View all activity →</a>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <script>
+        // Logout function
+        function logout() {
+            localStorage.removeItem('currentUser');
+            window.location.href = 'login.html';
+        }
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const body = document.body;
+            
+            // Redirect to login if not authenticated
+            if (!currentUser) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Initialize language
+            const lang = initLanguage();
+            const languageSelector = document.getElementById('language-selector');
+            if (languageSelector) {
+                languageSelector.value = lang || 'en';
+                
+                // Update language when changed
+                languageSelector.addEventListener('change', function() {
+                    const newLang = this.value;
+                    changeLanguage(newLang);
+                    
+                    // Update user's language preference
+                    currentUser.language = newLang;
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                });
+            }
+            
+            // Toggle sidebar on mobile
+            const menuToggle = document.getElementById('menu-toggle');
+            const sidebar = document.getElementById('sidebar');
+            const sidebarClose = document.querySelector('.sidebar-close');
+
+            // Initialize sidebar state
+            if (window.innerWidth > 1024) {
+                sidebar.classList.add('expanded');
+                body.classList.add('sidebar-expanded');
+            }
+            
+            // Show/hide admin features based on role
+            const adminFeatures = document.querySelectorAll('.admin-only');
+            const adminMenu = document.getElementById('admin-menu');
+            const userInfoElement = document.getElementById('user-info');
+            
+            if (currentUser.role === 'admin') {
+                adminFeatures.forEach(el => el.style.display = 'block');
+                if (adminMenu) adminMenu.style.display = 'block';
+            } else {
+                adminFeatures.forEach(el => el.style.display = 'none');
+                if (adminMenu) adminMenu.style.display = 'none';
+            }
+            
+            if (userInfoElement) {
+                userInfoElement.textContent = `${currentUser.name} (${currentUser.role})`;
+            }
+
+            // Toggle sidebar on menu button click
+            menuToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('expanded');
+                body.classList.toggle('sidebar-expanded');
+            });
+
+            // Close sidebar on close button click
+            if (sidebarClose) {
+                sidebarClose.addEventListener('click', function() {
+                    sidebar.classList.remove('expanded');
+                    body.classList.remove('sidebar-expanded');
+                });
+            }
+        });
+    </script>
+    <script src="js/script.js"></script>
+</body>
+</html>

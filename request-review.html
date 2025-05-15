@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="requestReview">Request Review - Visify</title>
+    <script src="js/language.js"></script>
+
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-light: #3b82f6;
+            --primary-dark: #1d4ed8;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --border-color: #e5e7eb;
+            --radius: 0.5rem;
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+
+        body {
+            background-color: #f9fafb;
+            color: var(--text-primary);
+            line-height: 1.5;
+        }
+
+        /* Sidebar Styles - Kopieret fra index.html */
+        .menu-toggle {
+            display: none;
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            background: var(--primary);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            cursor: pointer;
+            z-index: 1001;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 280px;
+            height: 100vh;
+            background: #1e293b;
+            color: white;
+            padding: 1.5rem 0;
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+            transition: transform 0.3s ease;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar-header {
+            padding: 0 1.5rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-header h3 {
+            margin: 0;
+            font-size: 1.25rem;
+            color: white;
+        }
+
+        .sidebar-close {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .sidebar-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem 0.5rem;
+        }
+
+        .nav-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .nav-item {
+            margin-bottom: 0.25rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.2s;
+            margin: 0 0.5rem;
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .nav-link.active {
+            background: var(--primary);
+            color: white;
+            font-weight: 500;
+        }
+
+        .nav-icon {
+            margin-right: 1rem;
+            font-size: 1.25rem;
+            width: 24px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-text {
+            flex: 1;
+        }
+
+        .main-content {
+            margin-left: 280px;
+            padding: 2rem;
+            transition: margin 0.3s ease;
+        }
+
+        /* Form Styles */
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-header h1 {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .page-header p {
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        .card {
+            background: white;
+            border-radius: var(--radius);
+            border: 1px solid var(--border-color);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+        }
+
+        .card-header {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .card-header h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            font-size: 1rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 500;
+            line-height: 1.5;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+
+        .customer-email {
+            background: #f9fafb;
+            border-radius: 0.375rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .remove-email {
+            color: #ef4444;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.25rem;
+            line-height: 1;
+            padding: 0.25rem;
+            margin-left: 0.5rem;
+        }
+
+        .add-email-btn {
+            display: inline-flex;
+            align-items: center;
+            color: var(--primary);
+            background: none;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            padding: 0.5rem 0;
+            margin-top: 0.5rem;
+        }
+
+        .add-email-btn svg {
+            margin-right: 0.5rem;
+        }
+
+        .platform-selector {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .platform-card {
+            flex: 1;
+            min-width: 120px;
+            max-width: 200px;
+            border: 2px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.5rem 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: white;
+        }
+
+        .platform-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .platform-card.active {
+            border-color: var(--primary);
+            background-color: #eff6ff;
+            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.5);
+        }
+
+        .platform-card img {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            margin-bottom: 0.75rem;
+        }
+
+        .platform-card span {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .template-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .template-card {
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .template-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 1px var(--primary);
+        }
+
+        .template-card.active {
+            border-color: var(--primary);
+            background-color: #eff6ff;
+        }
+
+        .template-card h4 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1rem;
+        }
+
+        .template-card p {
+            margin: 0;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 1024px) {
+            .menu-toggle {
+                display: flex;
+            }
+
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+
+            .sidebar.visible {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .sidebar-visible .main-content {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar Navigation -->
+    <button id="menu-toggle" class="menu-toggle" aria-label="Toggle menu">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+    </button>
+    <aside id="sidebar" class="sidebar">
+        <div class="sidebar-header">
+            <h3>Visify</h3>
+            <button class="sidebar-close">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+        <nav class="sidebar-nav">
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">
+                        <span class="nav-icon">📊</span>
+                        <span class="nav-text" data-i18n="dashboard">Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span class="nav-icon">📈</span>
+                        <span class="nav-text" data-i18n="analytics">Analytics</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="request-review.html" class="nav-link active">
+                        <span class="nav-icon">✉️</span>
+                        <span class="nav-text" data-i18n="requestReview">Request Review</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span class="nav-icon">📋</span>
+                        <span class="nav-text" data-i18n="templates">Templates</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span class="nav-icon">👥</span>
+                        <span class="nav-text" data-i18n="customers">Customers</span>
+                    </a>
+                </li>
+                <li class="nav-item nav-divider">
+                    <span>Account</span>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span class="nav-icon">👤</span>
+                        <span class="nav-text" data-i18n="myAccount">My Account</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="settings.html" class="nav-link">
+                        <span class="nav-icon">⚙️</span>
+                        <span class="nav-text" data-i18n="settings">Settings</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link logout">
+                        <span class="nav-icon">🚪</span>
+                        <span class="nav-text" data-i18n="logout">Logout</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <div class="sidebar-footer">
+            <div class="user-profile" style="padding: 1rem; border-top: 1px solid rgba(255, 255, 255, 0.1); margin-top: auto;">
+                <div style="display: flex; align-items: center;">
+                    <div style="width: 40px; height: 40px; border-radius: 50%; background: #3b82f6; color: white; display: flex; align-items: center; justify-content: center; font-weight: 600; margin-right: 0.75rem; font-size: 0.875rem;">JD</div>
+                    <div style="overflow: hidden;">
+                        <div style="color: white; font-weight: 500; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">John Doe</div>
+                        <div style="color: rgba(255, 255, 255, 0.7); font-size: 0.75rem; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">john@example.com</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <div class="main-content">
+        <div class="page-header">
+            <h1 data-i18n="requestReview">Request Reviews</h1>
+            <p data-i18n="requestReviewDescription">Send review requests to your customers and collect valuable feedback</p>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h2 data-i18n="selectCustomers">1. Select Customers</h2>
+            </div>
+            <div class="form-group">
+                <label for="customer-emails" data-i18n="customerEmails">Customer Emails</label>
+                <div id="email-container">
+                    <div class="customer-email">
+                        <input type="email" class="form-control" placeholder="customer@example.com">
+                        <button class="remove-email" onclick="removeEmail(this)">×</button>
+                    </div>
+                </div>
+                <button class="add-email-btn" onclick="addEmailField()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    <span data-i18n="addAnotherEmail">Add another email</span>
+                </button>
+            </div>
+            <div class="form-group">
+                <label for="customer-csv" data-i18n="uploadCsv">Or upload CSV file</label>
+                <input type="file" id="customer-csv" class="form-control" accept=".csv">
+                <small style="display: block; margin-top: 0.5rem; color: var(--text-secondary);" data-i18n="uploadCsvDescription">Upload a CSV file containing customer emails (one per line)</small>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h2 data-i18n="selectReviewPlatform">2. Select Review Platform</h2>
+            </div>
+            <div class="form-group">
+                <p style="margin-bottom: 1rem;" data-i18n="chooseReviewPlatform">Choose where you want to collect reviews:</p>
+                <div class="platform-selector">
+                    <div class="platform-card active" data-platform="google">
+                        <img src="https://www.google.com/images/branding/googleg/1x/googleg_standard_color_128dp.png" alt="Google">
+                        <span data-i18n="google">Google</span>
+                    </div>
+                    <div class="platform-card" data-platform="tripadvisor">
+                        <img src="https://static.tacdn.com/img2/brand_refresh/Tripadvisor_lockup_horizontal_secondary_registered.svg" alt="TripAdvisor">
+                        <span data-i18n="tripadvisor">TripAdvisor</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h2>3. Choose Template</h2>
+            </div>
+            <div class="form-group">
+                <div class="template-selector">
+                    <div class="template-card active">
+                        <h4>Standard Review</h4>
+                        <p>Simple request for a rating and feedback</p>
+                    </div>
+                    <div class="template-card">
+                        <h4>Detailed Feedback</h4>
+                        <p>Asks for detailed product feedback</p>
+                    </div>
+                    <div class="template-card">
+                        <h4>NPS Survey</h4>
+                        <p>Net Promoter Score survey</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h2 data-i18n="customizeMessage">3. Customize Message</h2>
+            </div>
+            <div class="form-group">
+                <label for="email-subject" data-i18n="emailSubject">Email Subject</label>
+                <input type="text" id="email-subject" class="form-control" value="" data-i18n-placeholder="shareExperienceSubject">
+            </div>
+            <div class="form-group">
+                <label for="email-body" data-i18n="emailBody">Email Body</label>
+                <textarea id="email-body" class="form-control" rows="6" data-i18n-placeholder="emailBodyPlaceholder"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Preview</label>
+                <div style="border: 1px solid var(--border-color); border-radius: 0.375rem; padding: 1rem; background: #f9fafb; min-height: 200px;">
+                    <p>Email preview will appear here</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h2 data-i18n="scheduleAndSend">4. Schedule & Send</h2>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" checked> Send me a copy of each review request
+                </label>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" checked> Schedule for later
+                </label>
+                <div style="margin-top: 0.5rem; display: none;" id="schedule-options">
+                    <input type="datetime-local" class="form-control" style="max-width: 300px;">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary" style="margin-top: 1.5rem;" data-i18n="sendReviewRequests">Send Review Requests</button>
+        </div>
+    </div>
+
+    <script>
+        // Initialize language and UI elements when the page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize language
+            initLanguage();
+            
+            // Toggle sidebar on mobile
+            const menuToggle = document.getElementById('menu-toggle');
+            const sidebar = document.getElementById('sidebar');
+            const sidebarClose = document.querySelector('.sidebar-close');
+            const body = document.body;
+
+            function toggleSidebar() {
+                sidebar.classList.toggle('visible');
+                body.classList.toggle('sidebar-visible');
+            }
+
+            if (menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+            if (sidebarClose) sidebarClose.addEventListener('click', toggleSidebar);
+
+            // Close sidebar when clicking outside on mobile
+            document.addEventListener('click', function(e) {
+                if (window.innerWidth <= 1024 && 
+                    !sidebar.contains(e.target) && 
+                    !menuToggle.contains(e.target) &&
+                    sidebar.classList.contains('visible')) {
+                    toggleSidebar();
+                }
+            });
+
+            // Platform selection
+            const platformCards = document.querySelectorAll('.platform-card');
+            platformCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    platformCards.forEach(c => c.classList.remove('active'));
+                    card.classList.add('active');
+                    // Update the email template based on selected platform
+                    updateTemplateForPlatform(card.dataset.platform);
+                });
+            });
+
+            // Template selection
+            const templateCards = document.querySelectorAll('.template-card');
+            templateCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    templateCards.forEach(c => c.classList.remove('active'));
+                    card.classList.add('active');
+                });
+            });
+
+            // Function to update email template based on selected platform
+            function updateTemplateForPlatform(platform) {
+                const emailSubject = document.getElementById('email-subject');
+                const emailMessage = document.getElementById('email-message');
+                
+                const templates = {
+                    google: {
+                        subject: "We'd love your Google review!",
+                        message: "Hi [Customer Name],\n\nThank you for choosing us! We'd be so grateful if you could take a moment to share your experience by leaving us a review on Google.\n\n[Google Review Button]\n\nYour feedback helps us improve and helps others discover our business.\n\nBest regards,\n[Your Name]"
+                    },
+
+                    tripadvisor: {
+                        subject: "How was your experience with us?",
+                        message: "Hi [Customer Name],\n\nThank you for visiting us! We'd be delighted if you could share your experience on TripAdvisor.\n\n[TripAdvisor Review Button]\n\nYour feedback helps us improve and helps other travelers make the best choices.\n\nWarm regards,\n[Your Name]"
+                    }
+                };
+
+                if (templates[platform]) {
+                    if (emailSubject) emailSubject.value = templates[platform].subject;
+                    if (emailMessage) emailMessage.value = templates[platform].message;
+                }
+            }
+
+            // Schedule options toggle
+            const scheduleCheckbox = document.querySelector('input[type="checkbox"]:last-of-type');
+            if (scheduleCheckbox) {
+                scheduleCheckbox.addEventListener('change', function() {
+                    const scheduleOptions = document.getElementById('schedule-options');
+                    if (this.checked) {
+                        scheduleOptions.style.display = 'block';
+                    } else {
+                        scheduleOptions.style.display = 'none';
+                    }
+                });
+            }
+        });
+
+        // Add/remove email fields
+        function addEmailField() {
+            const container = document.getElementById('email-container');
+            const newEmail = document.createElement('div');
+            newEmail.className = 'customer-email';
+            newEmail.innerHTML = `
+                <input type="email" class="form-control" placeholder="customer@example.com">
+                <button class="remove-email" onclick="removeEmail(this)">×</button>
+            `;
+            container.appendChild(newEmail);
+        }
+
+        function removeEmail(button) {
+            const emails = document.querySelectorAll('.customer-email');
+            if (emails.length > 1) {
+                button.closest('.customer-email').remove();
+            } else {
+                // Don't remove the last email field, just clear it
+                const input = button.previousElementSibling;
+                if (input) input.value = '';
+            }
+        }
+    </script>
+</body>
+</html>
